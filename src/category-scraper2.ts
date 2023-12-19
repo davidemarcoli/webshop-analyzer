@@ -45,7 +45,7 @@ const fetchCategory = async (el: ElementHandle) => {
     await page.setUserAgent(userAgent.random().toString());
     await page.goto(linkAddress);
     //console.log("Navigating")
-    const categoryButton = await page.$("button.sc-4ef0d092-1.sc-4ef0d092-2.fvCfDS.MxYlE")
+    const categoryButton = await page.waitForSelector("button.sc-4ef0d092-1.sc-4ef0d092-2.fvCfDS.MxYlE")
     // const categoryButton = await page.$("#productListingContainer > div:nth-child(3) > div > div > div.sc-323b3b06-0.HnQNk > div:nth-child(1) > button")
     if (!categoryButton) {
         console.error((await page.$$("button")).length);

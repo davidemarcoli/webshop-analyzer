@@ -32,10 +32,11 @@ const fetchCategory = async (link: string, name: string) => {
     await page.setUserAgent(userAgent.random().toString());
     await page.goto(link);
     //console.log("Navigating")
-    const categoryButton = await page.$("button.sc-4ef0d092-1.sc-4ef0d092-2.fvCfDS.MxYlE")
+    const categoryButton = await page.waitForSelector("button.sc-4ef0d092-1.sc-4ef0d092-2.fvCfDS.MxYlE")
     // const categoryButton = await page.$("#productListingContainer > div:nth-child(3) > div > div > div.sc-323b3b06-0.HnQNk > div:nth-child(1) > button")
     if (!categoryButton) {
-        console.error((await page.$$("button")).length);
+        console.error("Button not found!")
+        // console.error((await page.$$("button")).length);
         // (await page.$$("button")).forEach(async (e: ElementHandle) => {
         //     console.log(await e.getProperty("ariaLabel"))
         // })
@@ -47,7 +48,7 @@ const fetchCategory = async (link: string, name: string) => {
 
     const subCategories = await page.$$("label.sc-4afc59df-0.cStzil.sc-3798334f-0.eMqCTF")
     //console.log("Got " + subCategories.length + " subcategories")
-    category.subCategories = await Promise.all(subCategories.map(async (subCategory: ElementHandle, i: number) => getSubCategoryName(subCategory)));
+    category.subCategories = await Promise.all(subCategories.map((subCategory: ElementHandle) => getSubCategoryName(subCategory)));
     return category
 }
 
@@ -57,11 +58,15 @@ const browser = await puppeteer.launch({headless: "new"});
 const page = await browser.newPage();
 
 try {
-
-    const category = await fetchCategory("https://www.digitec.ch/en/s1/tag/audio-591", "Audio")
+    const name = "Wearables"
+    const link = "https://www.digitec.ch/en/s1/tag/wearables-521"
+    const category = await fetchCategory(link, name)
 
     //console.log(filteredCategories)
     fs.writeFile('category.json', JSON.stringify(category, null, 2), 'utf8', () => {});
+    fs.writeFile('category.txt', `${name} (${link})\n\n${category?.subCategories.join("\n")}`, () => {});
 } catch (error) {
     console.error("Error fetching categories:", error);
 }
+
+await browser.close();
