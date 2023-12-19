@@ -1,0 +1,13 @@
+{
+  "name": "webshop-analyzer",
+  "version": "1.0.0",
+  "dependencies": { "cheerio": "^1.0.0-rc.12", "puppeteer": "^21.6.1", "unirest": "^0.6.0", "user-agents": "^1.1.58" },
+  "module": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
